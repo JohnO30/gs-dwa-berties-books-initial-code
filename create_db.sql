@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS login_audit (
     message       VARCHAR(255),
     PRIMARY KEY(id));
 
-# Create the application user
-CREATE USER IF NOT EXISTS 'berties_books_app'@'localhost' IDENTIFIED BY 'qwertyuiop'; 
-GRANT ALL PRIVILEGES ON berties_books.* TO ' berties_books_app'@'localhost';
+DROP USER IF EXISTS ' berties_books_app'@'localhost';
+
+CREATE USER 'berties_books_app'@'localhost' IDENTIFIED BY 'qwertyuiop';
+GRANT ALL PRIVILEGES ON berties_books.* TO 'berties_books_app'@'localhost';
+FLUSH PRIVILEGES;
