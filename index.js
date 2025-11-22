@@ -1,52 +1,52 @@
 // Import express and ejs
-var express = require ('express')
-var ejs = require('ejs')
-const path = require('path')
-var mysql = require('mysql2');
+const express = require("express");
+const ejs = require("ejs");
+const path = require("path");
+const mysql = require("mysql2");
 
 // Load environment variables from .env file
-require('dotenv').config({ silent: true });
+require("dotenv").config({ silent: true });
 
 // Create the express application object
-const app = express()
-const port = process.env.PORT || 8000
+const app = express();
+const port = process.env.PORT || 8000;
 
 // Tell Express that we want to use EJS as the templating engine
-app.set('view engine', 'ejs')
-// Set views directory to the correct path
-app.set('views', path.join(__dirname, 'views'))
+app.set("view engine", "ejs");
 
-// Set up the body parser 
-app.use(express.urlencoded({ extended: true }))
+// Set views directory
+app.set("views", path.join(__dirname, "views"));
 
-// Set up public folder (for css and static js)
-app.use(express.static(path.join(__dirname, 'public')))
+// Body parser (needed for req.body)
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// Define our application-specific data
-app.locals.shopData = {shopName: process.env.SHOP_NAME || "Bertie's Books"}
+// Public folder for CSS, images, client-side JS
+app.use(express.static(path.join(__dirname, "public")));
+
+// Application data for templates
+app.locals.shopData = {
+    shopName: process.env.SHOP_NAME || "Bertie's Books"
+};
+
 // Define the database connection pool
 const db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'berties_books_app',
-    password: process.env.DB_PASSWORD || 'qwertyuiop',
-    database: process.env.DB_NAME || 'berties_books',
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "berties_books_app",
+    password: process.env.DB_PASSWORD || "qwertyuiop",
+    database: process.env.DB_NAME || "berties_books",
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
 });
+
+// Expose DB globally
 global.db = db;
 
 // Load the route handlers
-const mainRoutes = require("./routes/main")
-app.use('/', mainRoutes)
-
-// Load the route handlers for /users
-const usersRoutes = require('./routes/users')
-app.use('/users', usersRoutes)
-
-// Load the route handlers for /books
-const booksRoutes = require('./routes/books')
-app.use('/books', booksRoutes)
+app.use("/", require("./routes/main"));
+app.use("/users", require("./routes/users"));
+app.use("/books", require("./routes/books"));
 
 // Start the web app listening
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
