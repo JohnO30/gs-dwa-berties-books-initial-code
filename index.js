@@ -3,26 +3,30 @@ var express = require ('express')
 var ejs = require('ejs')
 const path = require('path')
 var mysql = require('mysql2');
-require('dotenv').config();
+
+// Load environment variables
+require('dotenv').config({ silent: true });
 
 // Create the express application object
 const app = express()
-const port = 8000
+const port = process.env.PORT || 8000
+
+// Tell Express that we want to use EJS as the templating engine
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'views'))
 
 // Define the database connection pool
 const db = mysql.createPool({
-  host: 'localhost',
-  user: process.env.BB_USER,
-  password: process.env.BB_PASSWORD,
-  database: process.env.BB_DATABASE,
+  host: process.env.BB_HOST || 'localhost',
+  user: process.env.BB_USER || 'berties_books_app',
+  password: process.env.BB_PASSWORD || 'qwertyuiop',
+  database: process.env.BB_DATABASE || 'berties_books',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
   
 global.db = db;
-// Tell Express that we want to use EJS as the templating engine
-app.set('view engine', 'ejs')
 
 // Set up the body parser 
 app.use(express.urlencoded({ extended: true }))
