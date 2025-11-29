@@ -1,25 +1,21 @@
 <!doctype html>
 <html>
   <head>
-    <!-- Dynamic page title using shop name from shopData object -->
     <title>Welcome to <%= shopData.shopName %></title>
-    <!-- Link to external CSS stylesheet for styling -->
     <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
 
   <body>
-    <!-- Main heading displaying the shop name dynamically -->
     <h1>Welcome to <%= shopData.shopName %></h1>
-
-    <!-- Navigation links -->
+<!-- Navigation links -->
     <p><a href="/about">About <%= shopData.shopName %></a></p>
     <p><a href="/books/search">Search for books</a></p>
     <p><a href="/books/list">List all books</a></p>
     <p><a href="/books/addbook">Add a new book</a></p>
     <p><a href="/users/register">Register with us</a></p>
 
-    <!-- Conditional rendering based on user session status -->
-    <% if (!session || !session.userId) { %>
+    <!-- Login/Logout link -->
+    <% if (typeof session === 'undefined' || !session.userId) { %>
       <p><a href="/users/login">Login</a></p>
     <% } else { %>
       <p><a href="/users/logout">Logout</a></p>
